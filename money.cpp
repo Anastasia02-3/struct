@@ -24,7 +24,6 @@ Money addMoney(Money m1, Money m2)
 Money multiplyMoney(Money money, int count)
 {
     Money result;
-
     result.grn = money.grn * count;
     result.cop = money.cop * count;
 
