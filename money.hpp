@@ -1,13 +1,19 @@
-#ifndef MONEY_H
-#define MONEY_H
+#ifndef MONEY_HPP
+#define MONEY_HPP
+
+#include <iostream>
 
 struct Money
 {
-    int grn;
-    short int cop;
+    int Moneyg;   
+    int Moneuk;   
 };
 
-Money addMoney(Money money1, Money money2), multiplyMoney(Money money, int count), roundMoney(Money money);
-void printMoney(Money money);
+void normalize(Money& money);
+void addMoney(Money& result, Money a, Money b);
+void multiplyMoney(Money& result, Money a, int count);
+void roundTo10(Money& money);
+void printMoney(const Money& money);
+void start(const char* filename);
 
 #endif
