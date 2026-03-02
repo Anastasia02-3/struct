@@ -8,31 +8,51 @@ void addMoney(Money *money, Money *other)
 {
     money->grn += other->grn;
     money->cop += other->cop;
+
+    if (money->cop >= 100)
+    {
+        money->grn += money->cop / 100;
+        money->cop %= 100;
+    }
 }
 
 void multiplyMoney(Money *money, int count)
 {
     money->grn *= count;
     money->cop *= count;
+
+    if (money->cop >= 100)
+    {
+        money->grn += money->cop / 100;
+        money->cop %= 100;
+    }
 }
 
 void roundMoney(Money *money)
 {
     int lastDigit = money->cop % 10;
     money->cop = (money->cop / 10) * 10;
-    if (lastDigit >= 8) {
+
+    if (lastDigit >= 8)
+    {
         money->cop += 10;
+    }
+
+    if (money->cop >= 100)
+    {
+        money->grn += money->cop / 100;
+        money->cop %= 100;
     }
 }
 
 void printMoney(Money *money)
 {
-    system("chcp 65001 > nul");
     cout << money->grn << " грн " << money->cop << " коп" << endl;
 }
 
 void start(const char *path)
 {
+    system("chcp 65001 > nul");
     FILE *file;
     int err = fopen_s(&file, path, "r");
     if (err != 0 || file == nullptr)
@@ -47,7 +67,7 @@ void start(const char *path)
     int grn;
     short int cop;
 
-    while (fscanf_s(file, "%s %d %hd %d", name, sizeof(name), &grn, &cop, &count) == 4)
+    while (fscanf_s(file, "%s %d %hd %d", name, (unsigned)_countof(name), &grn, &cop, &count) == 4)
     {
         if (count < 0 || grn < 0 || cop < 0)
         {
@@ -55,14 +75,10 @@ void start(const char *path)
             fclose(file);
             return;
         }
+
         Money temp = {grn, cop};
         multiplyMoney(&temp, count);
         addMoney(&total, &temp);
-    }
-
-    if(total.cop >= 100){
-        total.grn += total.cop / 100;
-        total.cop %= 100;
     }
 
     cout << "Total: ";
