@@ -1,5 +1,4 @@
 #include "money.hpp"
-#include <windows.h>
 
 
 int main()

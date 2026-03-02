@@ -4,24 +4,16 @@
 
 using namespace std;
 
-void fixMoney(Money *money)
-{
-    money->grn += money->cop / 100;
-    money->cop = money->cop % 100;
-}
-
 void addMoney(Money *money, Money *other)
 {
     money->grn += other->grn;
     money->cop += other->cop;
-    fixMoney(money);
 }
 
 void multiplyMoney(Money *money, int count)
 {
     money->grn *= count;
     money->cop *= count;
-    fixMoney(money);
 }
 
 void roundMoney(Money *money)
@@ -31,8 +23,6 @@ void roundMoney(Money *money)
     if (lastDigit >= 8) {
         money->cop += 10;
     }
-    
-    fixMoney(money);
 }
 
 void printMoney(Money *money)
@@ -54,13 +44,12 @@ void start(const char *path)
     Money total = {0, 0};
     char name[100];
     int count;
-    int grams;
     int grn;
     short int cop;
 
-    while (fscanf_s(file, "%s %d %d %d %hd", name, sizeof(name), &count, &grams, &grn, &cop) == 5)
+    while (fscanf_s(file, "%s %d %hd %d", name, sizeof(name), &grn, &cop, &count) == 4)
     {
-        if (count <= 0 || grams < 0 || grn < 0 || cop < 0 || cop >= 100)
+        if (count < 0 || grn < 0 || cop < 0)
         {
             cout << "Incorrect data in file" << endl;
             fclose(file);
@@ -69,6 +58,11 @@ void start(const char *path)
         Money temp = {grn, cop};
         multiplyMoney(&temp, count);
         addMoney(&total, &temp);
+    }
+
+    if(total.cop >= 100){
+        total.grn += total.cop / 100;
+        total.cop %= 100;
     }
 
     cout << "Total: ";
